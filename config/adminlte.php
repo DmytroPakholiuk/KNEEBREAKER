@@ -319,8 +319,13 @@ return [
         [
             'text' => 'Configuration',
             'url' => '/configuration',
-            'icon' => 'far fa-fw fa-user',
+            'icon' => 'far fa-fw fa-square',
         ],
+        [
+            'text' => "My Users",
+            'url' => "/users",
+            'icon' => 'far fa-fw fa-user',
+        ]
 //        ['header' => 'account_settings'],
 //        [
 //            'text' => 'Log Out',
