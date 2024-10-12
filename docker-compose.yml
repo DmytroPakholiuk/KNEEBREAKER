@@ -1,0 +1,76 @@
+version: '3.2'
+
+networks:
+  kneebreaker_network:
+    external: true
+
+services:
+
+  nginx:
+    container_name: kneebreaker_nginx
+    image: nginx:latest
+    ports:
+      - ${DOCKER_NGINX_PORT:-20080}:80
+    volumes:
+      - .:/var/www/kneebreaker
+      - ./docker/nginx/kneebreaker.conf:/etc/nginx/conf.d/kneebreaker.conf
+    depends_on:
+      - php
+    networks:
+      kneebreaker_network:
+        ipv4_address: ${KNEEBREAKER_DOCKER_NGINX_IP:-175.10.10.3}
+
+  php:
+#    image: php:8.1-fpm
+    container_name: kneebreaker_php
+    ports:
+      - ${DOCKER_PHP_PORT:-29000}:9000
+    build:
+      context: ./docker/php
+    volumes:
+      - .:/var/www/kneebreaker
+    working_dir: /var/www/kneebreaker
+    depends_on:
+      - kneebreaker_mysql
+    networks:
+      kneebreaker_network:
+        ipv4_address: ${KNEEBREAKER_DOCKER_PHP_IP:-175.10.10.4}
+#
+#  node:
+#    container_name: kneebreaker_node
+##    command: bash -c "npm install; npm update && npm run build"
+#    command: bash -c "npm run dev"
+#    ports:
+#      - ${DOCKER_NPM_PORT:-23000}:3000
+#    image: node:18
+#    volumes:
+#        - .:/var/www/kneebreaker
+#    working_dir: /var/www/kneebreaker
+#    networks:
+#      kneebreaker_network:
+#        ipv4_address: ${KNEEBREAKER_DOCKER_NODE_IP:-175.10.10.7}
+
+
+  kneebreaker_mysql:
+    container_name: kneebreaker_mysql
+    image: mysql:latest
+    ports:
+      - ${DOCKER_MYSQL_PORT:-23306}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${KNEEBREAKER_DOCKER_DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${KNEEBREAKER_DOCKER_DB_DB}
+      - MYSQL_USER=${KNEEBREAKER_DOCKER_DB_USER}
+      - MYSQL_PASSWORD=${KNEEBREAKER_DOCKER_DB_PASSWORD}
+      - TZ=GMT+2
+    volumes:
+      - .:/var/www/kneebreaker
+      - ./mysql_data:/var/lib/mysql:rw
+      - ./docker/mysql/entrypoint/:/docker-entrypoint-initdb.d/ # - можемо кидати потрібні ініціалізуючі скрипти
+    networks:
+      kneebreaker_network:
+        ipv4_address: ${KNEEBREAKER_DOCKER_MYSQL_IP:-175.10.10.6}
+
+volumes:
+  kneebreaker_mysql_data:
+    external:
+      name: kneebreaker_mysql_data
