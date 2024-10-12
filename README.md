@@ -14,7 +14,7 @@ I named it like that because the "ACL" also refers to some sort of knee injury.
 
 I have created an <code>install.sh</code> script that will do all the preparations for you.
 On Linux, just run it with the root permissions (it needs them to insert a record to your /etc/hosts file).
-<b>You might need to run it multiple times</b>, because sometimes the app doesn't migrate correctly for whatever reason
+<b>You might need to run it multiple times</b>, because seldom the app doesn't migrate correctly for whatever reason
 <br>
 All subsequent starts of the project can be performed within the install.sh, or by running 
 <code>docker-compose up -d</code>

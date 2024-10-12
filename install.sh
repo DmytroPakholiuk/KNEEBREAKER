@@ -85,6 +85,7 @@ function initialiseLaravel() {
   output "key generation successful" success
 
   output "running laravel migrations" info
+    sleep 5 # await for mysql container to finish up self-configuration
     docker exec kneebreaker_php bash -c "php artisan config:clear && php artisan cache:clear"
     docker exec kneebreaker_php bash -c "php artisan migrate"
   output "laravel migrations successful" success
