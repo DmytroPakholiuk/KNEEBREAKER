@@ -85,6 +85,7 @@ function initialiseLaravel() {
   output "key generation successful" success
 
   output "running laravel migrations" info
+    docker exec kneebreaker_php bash -c "php artisan config:clear && php artisan cache:clear"
     docker exec kneebreaker_php bash -c "php artisan migrate"
   output "laravel migrations successful" success
 
@@ -124,7 +125,7 @@ function start() {
 
 function copyEnv() {
   if ! [[ -f '.env' ]]; then
-      cp .example.env .env
+      cp .env.example .env
   fi
 }
 
